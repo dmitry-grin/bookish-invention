@@ -34,31 +34,31 @@ class BookTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       alignment: Alignment.centerLeft,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: CachedNetworkImage(
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: CachedNetworkImage(
+              width: _coverWidth,
+              height: _coverHeight,
+              imageUrl: book.imageUrl,
+              placeholder: (_, __) {
+                return const RectanglePlaceholder(
                   width: _coverWidth,
                   height: _coverHeight,
-                  imageUrl: book.imageUrl,
-                  placeholder: (_, __) {
-                    return const RectanglePlaceholder(
-                      width: _coverWidth,
-                      height: _coverHeight,
-                    );
-                  },
-                ),
-              ),
-              Text(
-                book.title,
-                style: const TextStyle(color: Colors.black),
-              ),
-            ],
+                );
+              },
+            ),
           ),
-          const Icon(Icons.chevron_right, color: Colors.grey),
+          Expanded(
+            child: Text(
+              book.title,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 8.0),
+            child: Icon(Icons.chevron_right, color: Colors.grey),
+          ),
         ],
       ),
     );

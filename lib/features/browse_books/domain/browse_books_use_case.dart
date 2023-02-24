@@ -19,9 +19,11 @@ class BrowseBooksUseCase extends UseCase<BrowseBooksEntity> {
     await request<MyBooksGatewayOutput, MyBooksSuccessInput>(
       MyBooksGatewayOutput(),
       onSuccess: (success) {
+        final books = success.books.map(BookModel.fromBookIdentity);
+
         return entity.copyWith(
           status: BrowseStatus.loaded,
-          books: success.books,
+          books: books.toList(),
         );
       },
       onFailure: (failure) {
@@ -35,13 +37,6 @@ class BrowseBooksUIOutputTransformer
     extends OutputTransformer<BrowseBooksEntity, BrowseBooksUIOutput> {
   @override
   BrowseBooksUIOutput transform(BrowseBooksEntity entity) {
-    final books = entity.books.map(
-      (bookIdentity) {
-        final substrings = bookIdentity.url.split('/');
-        return BookModel(bookIdentity.title, 'http:${bookIdentity.picture}', substrings.last);
-      },
-    ).toList();
-
-    return BrowseBooksUIOutput(status: entity.status, books: books);
+    return BrowseBooksUIOutput(status: entity.status, books: entity.books);
   }
 }

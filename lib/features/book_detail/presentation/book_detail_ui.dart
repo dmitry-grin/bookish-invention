@@ -124,7 +124,7 @@ class BookDetailUI extends UI<BookDetailViewModel> {
             ),
             const SizedBox(height: 16),
             Wrap(
-              children: List.generate(10, (index) {
+              children: List.generate(16, (index) {
                 final double fakeWidth = index % 2 == 0
                     ? index % 3 == 0
                         ? 60

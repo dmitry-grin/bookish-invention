@@ -19,7 +19,7 @@ class BrowseBooksPresenter
     return BrowseBooksViewModel(
       status: output.status,
       books: output.books,
-      onRefresh: () async => await useCase.fetchBooks(),
+      onRefresh: () => useCase.fetchBooks(),
     );
   }
 
