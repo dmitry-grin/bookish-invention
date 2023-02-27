@@ -15,18 +15,22 @@ class BookDetailUseCase extends UseCase<BookDetailEntity> {
       status: BookDetailStatus.loading,
     );
 
-    await request<BookDetailGatewayOutput, BookDetailSuccessInput>(
-      BookDetailGatewayOutput(bookId),
-      onSuccess: (success) {
-        return entity.copyWith(
-          status: BookDetailStatus.loaded,
-          bookDetail: success.bookDetail,
-        );
-      },
-      onFailure: (failure) {
-        return entity.copyWith(status: BookDetailStatus.error);
-      },
-    );
+    try {
+      await request<BookDetailGatewayOutput, BookDetailSuccessInput>(
+        BookDetailGatewayOutput(bookId),
+        onSuccess: (success) {
+          return entity.copyWith(
+            status: BookDetailStatus.loaded,
+            bookDetail: success.bookDetail,
+          );
+        },
+        onFailure: (failure) {
+          return entity.copyWith(status: BookDetailStatus.error);
+        },
+      );
+    } catch (_) {
+      entity = entity.copyWith(status: BookDetailStatus.error);
+    }
   }
 }
 

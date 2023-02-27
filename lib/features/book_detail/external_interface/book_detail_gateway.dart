@@ -16,30 +16,7 @@ class BookDetailGateway extends Gateway<BookDetailGatewayOutput, BookDetailReque
 
   @override
   BookDetailSuccessInput onSuccess(covariant OpenLibrarySuccessResponse response) {
-    final entry = response.data.entries.first.value as Map<String, dynamic>;
-
-    final deserializer = Deserializer(entry);
-
-    final authors = deserializer.getList('authors', converter: (map) {
-      return map['name'] as String;
-    });
-
-    final publishDate = deserializer.getString('publish_date');
-
-    final coverUrl = deserializer.getMap('cover')['medium'] as String;
-
-    final subjects = deserializer.getList('subjects', converter: (map) {
-      return map['name'] as String;
-    });
-
-    final model = BookDetailModel(
-      author: authors.first,
-      publishDate: publishDate,
-      coverUrl: coverUrl,
-      subjects: subjects,
-    );
-
-    return BookDetailSuccessInput(model);
+    return BookDetailSuccessInput(BookDetailModel.fromJson(response.data));
   }
 }
 
@@ -86,4 +63,21 @@ class BookDetailModel {
     required this.coverUrl,
     required this.subjects,
   });
+
+  factory BookDetailModel.fromJson(Map<String, dynamic> json) {
+    final entry = json.entries.first.value as Map<String, dynamic>;
+
+    final deserializer = Deserializer(entry);
+
+    return BookDetailModel(
+      author: deserializer.getList('authors', converter: (map) {
+        return map['name'] as String;
+      }).first,
+      publishDate: deserializer.getString('publish_date'),
+      coverUrl: deserializer.getMap('cover')['medium'] as String,
+      subjects: deserializer.getList('subjects', converter: (map) {
+        return map['name'] as String;
+      }),
+    );
+  }
 }
